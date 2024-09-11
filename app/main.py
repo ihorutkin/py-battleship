@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-
 class Deck:
     def __init__(
             self,
@@ -32,7 +29,7 @@ class Ship:
             for i in range(start[0], end[0] + 1):
                 self.decks.append(Deck(i, start[1]))
 
-    def get_deck(self, row: int, column: int) -> Deck:
+    def get_deck(self, row: int, column: int) -> "Deck":
         for deck in self.decks:
             if deck.row == row and deck.column == column:
                 return deck
@@ -46,24 +43,26 @@ class Ship:
 
 
 class Battleship:
-
-    def __init__(self, ships: list) -> None:
+    def __init__(self, ships: list[tuple]) -> None:
         self.ships = ships
         self.field = {}
 
         for ship in ships:
-            ship_instance = Ship(ship[0], ship[1])
-            for deck in Ship(ship[0], ship[1]).decks:
+            ship_instance = Ship(*ship)
+            for deck in Ship(*ship).decks:
                 self.field[(deck.row, deck.column)] = ship_instance
 
-    def fire(self, location: tuple) -> str:
+    def fire(self, location: tuple[int, int]) -> str:
         if location in self.field:
             ship = self.field[location]
             ship.fire(*location)
 
             if ship.is_drowned:
                 return "Sunk!"
-            else:
-                return "Hit!"
-        else:
-            return "Miss!"
+            return "Hit!"
+        return "Miss!"
+
+
+obj = {
+    "field_1": 243
+}
